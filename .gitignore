@@ -21,6 +21,7 @@ tanzu
 
 .ssh/*
 !.ssh/.gitkeep
+!.ssh/sshuttleconfig
 .kube/*
 !.kube/.gitkeep
 binaries/*
@@ -28,10 +29,18 @@ binaries/*
 !binaries/scripts
 binaries/scripts/*
 !binaries/scripts/.gitkeep
-!binaries/installpackagerepository.sh
+
+!binaries/bastion
+binaries/bastion/*
+!binaries/bastion/bastionhostmanagementsetup.sh
+
+!binaries/init.sh
+!binaries/tkginstall.sh
+
+
 !binaries/installprofile.sh
 !binaries/generate-profile-file.sh
 !binaries/installdevnamespace.sh
 !binaries/createakscluster.sh
-!binaries/init.sh
+
 !binaries/templates

@@ -19,8 +19,24 @@ ls -l $HOME/binaries/templates/*.sh | awk '{print $9}' | xargs chmod +x
 source $HOME/binaries/scripts/init-prechecks.sh
 
 printf "\n\n************Checking installed binaries**************\n\n"
-source $HOME/binaries/scripts/install-tanzu-framework-tarfile.sh
-installTanzuFrameworkTarFile
+source $HOME/binaries/scripts/install-tanzu-cli.sh
+installTanzuCLI
 printf "DONE\n\n\n"
+
+if [[ -f $HOME/.kube-tkg/config ]]
+then
+    printf "\n\n************Connecting Tanzu Management to k8s**************\n\n"
+    source $HOME/binaries/scripts/tanzu_connect.sh
+    tanzu_connect_and_confirm
+    printf "DONE\n\n\n"
+fi
+
+printf "\n\n\nYour available wizards are:\n"
+echo -e "\t~/binaries/tkginstall.sh --help"
+echo -e "\t~/binaries/tkgworkloadwizard.sh --help"
+echo -e "\t~/binaries/tkgconnect.sh --help"
+
+cd ~
+
 
 /bin/bash
