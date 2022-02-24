@@ -3,17 +3,25 @@
 export $(cat /root/.env | xargs)
 unset doinstall
 
-if [ ! -f "$HOME/binaries/scripts/install-tanzu-framework-tarfile.sh" ]
+if [ ! -f "$HOME/binaries/scripts/install-tanzu-cli.sh" ]
 then
+    if [[ ! -d  "$HOME/binaries/scripts" ]]
+    then
+        mkdir -p $HOME/binaries/scripts
+    fi
     printf "\n\n************Downloading Common Scripts**************\n\n"
     curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o /tmp/download-common-scripts.sh
     chmod +x /tmp/download-common-scripts.sh
     ./tmp/download-common-scripts.sh all $HOME/binaries/scripts/
+    sleep 1
+    printf "setting executable permssion common scripts..."    
+    ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
+    printf "COMPLETED"
+    printf "\n\n"
 fi
 
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x
-ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/templates/*.sh | awk '{print $9}' | xargs chmod +x
 
 source $HOME/binaries/scripts/init-prechecks.sh

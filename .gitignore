@@ -33,6 +33,9 @@ binaries/scripts/*
 !binaries/bastion
 binaries/bastion/*
 !binaries/bastion/bastionhostmanagementsetup.sh
+!binaries/bastion/bastionhostinit.sh
+!binaries/bastion/bastionhostrun.sh
+
 
 !binaries/init.sh
 !binaries/tkginstall.sh

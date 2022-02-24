@@ -8,18 +8,7 @@ unset BASTION_USERNAME
 
 export $(cat /root/.env | xargs)
 
-
-returnOrexit()
-{
-    echo '=> Terminating sshuttle process by signal (SIGINT, SIGTERM, SIGKILL, EXIT)'
-    killall -9 sshuttle ssh
-    iptables --flush
-    sleep 2
-    iptables --flush
-    sleep 1
-    echo "=> *DONE*"
-    returnOrexit || return 1
-}
+source $HOME/binaries/scripts/returnOrexit.sh
 
 
 helpFunction()
@@ -31,25 +20,16 @@ helpFunction()
     printf "\t\t- Bastion host must have docker engine (docker ce or docker ee) installed. (if you do not have it installed please do so now)\n"
     printf "\t\t- Bastion host must have php installed. (if you do not have it installed please do so now).\n"
     printf "\n\n"
-    exit 1 # Exit script after printing help
+    returnOrexit || return 1 # Exit script after printing help
 }
 
 
-while getopts "h:" opt
-do
-    case $opt in
-        h ) helpFunction ;;
-        ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
-    esac
-done
-
-
-
 function tkginstall() {
-    
+
     if [[ -f $HOME/.kube-tkg/config ]]
     then
-        printf "ERROR: kube-tkg-config file already exists in $HOME/.kube-tkg/config."
+        printf "\n\nERROR: kube-tkg-config file already exists in $HOME/.kube-tkg/config.\n"
+        printf "\n\n\nRUN ~/binaries/tkgworkloadwizard.sh --help to start creating workload clusters.\n\n\n"
         returnOrexit || return 1  
     fi
     
@@ -101,8 +81,25 @@ function tkginstall() {
 
     if [[ -n $BASTION_HOST ]]
     then
-        echo "=> Bastion host detected."
+        echo "=> Bastion host detected. Tkg installation will launch merlin-tkg docker in the remote host."
+        local confirmation='y'
+        if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
+        then
+            while true; do
+                read -p "Confirm to continue [yn]? " yn
+                case $yn in
+                    [Yy]* ) printf "\nyou confirmed yes\n"; break;;
+                    [Nn]* ) confirmation='n'; printf "\nyou confirmed no\n"; break;;
+                    * ) echo "Please answer y when you are ready.";;
+                esac
+            done
+        fi
+        if [[ $confirmation == 'n' ]]
+        then
+            returnOrexit || return 1
+        fi
         source $HOME/binaries/bastionhostmanagementsetup.sh
+        auto_tkginstall
     else
         printf "\n\n\n Here's your public key in ~/.ssh/id_rsa.pub:\n"
         cat ~/.ssh/tkg_rsa.pub
@@ -132,25 +129,16 @@ function tkginstall() {
     printf "\nCOMPLETE=YES" >> /root/.env
 
 
-
-
-
-
-
-
-
-
-    if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
-    then
-
-        
-        
-        
-    else
-        printf "\n\n\n Already marked as complete in the .env. If this is not desired then remove the 'COMPLETE=yes' from the .env file.\n"
-    fi
-
     printf "\n\n\nRUN ~/binaries/tkgworkloadwizard.sh --help to start creating workload clusters.\n\n\n"
 }
 
 
+while getopts "h:" opt
+do
+    case $opt in
+        h ) helpFunction; exit 0 ;;
+        ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+    esac
+done
+
+tkginstall

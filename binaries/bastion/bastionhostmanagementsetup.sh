@@ -4,6 +4,7 @@ export $(cat /root/.env | xargs)
 remoteDIR="~/merlin/merlin-tkg"
 remoteDockerName="merlin-tkg"
 localBastionDIR=$HOME/binaries/bastion
+localDockerContextName="merlin-bastion-docker-tkg"
 
 function prechecks () {
     printf "\nperforming prerequisites checks...\n"
@@ -115,7 +116,7 @@ function prepareRemote () {
     if [[ -z $isexist ]]
     then
         printf "\nUploading Dockerfile\n"
-        scp $HOME/Dockerfile $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/
+        scp $localBastionDIR/Dockerfile $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/
     fi
 
     isexist=$(cat /tmp/bastionhosthomefiles.txt | grep -w "dockerignore$")
@@ -130,7 +131,7 @@ function prepareRemote () {
     if [[ -n $isexist && -z $isexistidrsa ]]
     then
         printf "\nUploading .ssh/tkg_rsa\n"
-        scp ~/.ssh/tkg_rsa $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/.ssh/id_rsa
+        scp $HOME/.ssh/tkg_rsa $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/.ssh/id_rsa
     fi
 
     if [[ -n $MANAGEMENT_CLUSTER_CONFIG_FILE ]]
@@ -147,14 +148,14 @@ function startTKGCreate () {
 
 
     printf "\nCreating remote context...\n"
-    isexist=$(docker context ls | grep "merlin-bastionhostdocker$")
+    isexist=$(docker context ls | grep "$localDockerContextName$")
     if [[ -z $isexist ]]
     then
-        docker context create merlin-bastionhostdocker  --docker "host=ssh://$BASTION_USERNAME@$BASTION_HOST"
+        docker context create $localDockerContextName  --docker "host=ssh://$BASTION_USERNAME@$BASTION_HOST"
     fi
 
     printf "\nUsing remote context...\n"
-    export DOCKER_CONTEXT='merlin-bastionhostdocker'
+    export DOCKER_CONTEXT=$localDockerContextName
 
     printf "\nWaiting 3s before checking remote container...\n"
     sleep 3
@@ -200,6 +201,7 @@ function startTKGCreate () {
     mv /etc/ssh/ssh_config /etc/ssh/ssh_config-default
     ln -s $HOME/.ssh/ssh_config /etc/ssh/ssh_config
 
+    export SSHUTTLE=true
     printf "\n\n\n"
     echo "=> Establishing sshuttle with remote $BASTION_USERNAME@$BASTION_HOST...."
     sshuttle --dns --python python2 -D -r $BASTION_USERNAME@$BASTION_HOST 0/0 -x $BASTION_HOST/32 --disable-ipv6 --listen 0.0.0.0:0
@@ -266,14 +268,17 @@ function startTKGCreate () {
 
 
     printf "\n==> TGK management cluster deployed -->> DONE.\n"
-    printf "\nWaiting 30s before clean up...\n"
+    printf "\nWaiting 30s before shuttle shutdown...\n"
     sleep 30
 
     printf "\nStopping sshuttle...\n"
     sshuttlepid=$(ps aux | grep "/usr/bin/sshuttle --dns" | awk 'FNR == 1 {print $2}')
     kill $sshuttlepid
     printf "==> DONE\n"
+    unset SSHUTTLE
     sleep 2
+
+
 
     local confirmation='y'
     if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
@@ -464,6 +469,8 @@ function cleanBastion () {
     printf "\nRemoved docker images..."
 
 
+    unset DOCKER_CONTEXT
+
     # printf "\n\n"
     # printf "\nDuring the installation process Tanzu CLI created few files in the bastion host under directory ~/merlin of user $BASTION_USERNAME"
     # printf "\nNecessary files are downloaded on your local (this docker container) directory for local connection to tanzu kubernetes grid."
@@ -510,7 +517,7 @@ function cleanBastion () {
 
 
 
-function auto_tkg () {
+function auto_tkginstall () {
     prechecks
     prepareRemote
     startTKGCreate
