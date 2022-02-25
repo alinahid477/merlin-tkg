@@ -1,7 +1,6 @@
 #!/bin/bash
 
 export $(cat /root/.env | xargs)
-unset doinstall
 
 if [ ! -f "$HOME/binaries/scripts/install-tanzu-cli.sh" ]
 then
@@ -19,6 +18,9 @@ then
     printf "COMPLETED"
     printf "\n\n"
 fi
+
+source $HOME/binaries/scripts/returnOrexit.sh
+
 
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x

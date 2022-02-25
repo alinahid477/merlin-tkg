@@ -2,7 +2,6 @@
 
 unset TKG_ADMIN_EMAIL
 unset MANAGEMENT_CLUSTER_CONFIG_FILE
-unset COMPLETE
 unset BASTION_HOST
 unset BASTION_USERNAME
 
@@ -124,9 +123,12 @@ function tkginstall() {
     #     printf "\nDocumentation: https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.3/vmware-tanzu-kubernetes-grid-13/GUID-mgmt-clusters-configure-id-mgmt.html\n"
     # fi
 
-    printf "\n\n\nDone. Marking as commplete.\n\n\n"
-    sed -i '/COMPLETE/d' .env
-    printf "\nCOMPLETE=YES" >> /root/.env
+    # no need to marking as complete. I am checking ~/.kube-tkg/config instead.
+    printf "\n\n\nCOMPLETE\n\n\n"
+
+    # printf "\n\n\nDone. Marking as commplete.\n\n\n"
+    # sed -i '/COMPLETE/d' .env
+    # printf "\nCOMPLETE=YES" >> /root/.env
 
 
     printf "\n\n\nRUN ~/binaries/tkgworkloadwizard.sh --help to start creating workload clusters.\n\n\n"
