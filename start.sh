@@ -12,7 +12,7 @@ then
 fi
 
 isexist=$(ls Dockerfile)
-isexist2=$(ls binaries/Dockerfile)
+isexist2=$(ls binaries/bastion/Dockerfile)
 if [[ -z $isexist || -z $isexist2 ]]
 then
     numberoftarfound=$(find binaries/*tar* -type f -printf "." | wc -c)
