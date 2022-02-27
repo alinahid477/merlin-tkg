@@ -24,7 +24,7 @@ source $HOME/binaries/scripts/returnOrexit.sh
 
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x
-ls -l $HOME/binaries/templates/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/templates/* | awk '{print $9}' | xargs chmod +x
 
 source $HOME/binaries/scripts/init-prechecks.sh
 

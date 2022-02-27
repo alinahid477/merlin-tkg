@@ -42,29 +42,34 @@ function tkginstall() {
     if [[ -z $isexists ]]
     then
         
-        printf "TKG_ADMIN_EMAIL not set in the .env file."
-        printf "\n"
-        if [[ $SILENTMODE == 'y' ]]
+        if [[ -z $TKG_ADMIN_EMAIL ]]
         then
-            printf "\nERROR: tkg admin email not set.\n"
-            returnOrexit || return 1
+            printf "TKG_ADMIN_EMAIL not set in the .env file."
+            printf "\n"
+            if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
+            then
+                printf "\nERROR: tkg admin email not set.\n"
+                returnOrexit || return 1
+            fi
+            while true; do
+                read -p "TKG_ADMIN_EMAIL: " inp
+                if [ -z "$inp" ]
+                then
+                    printf "\nThis is required.\n"
+                else 
+                    TKG_ADMIN_EMAIL=$inp
+                    break;
+                fi
+            done        
+            printf "\nTKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL" >> /root/.env
+            sleep 1
+            export $(cat /root/.env | xargs)
+        else
+            printf "\nUsing TKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL from environment variable...no need to collect from user.\n"
         fi
         
-        while true; do
-            read -p "TKG_ADMIN_EMAIL: " inp
-            if [ -z "$inp" ]
-            then
-                printf "\nThis is required.\n"
-            else 
-                TKG_ADMIN_EMAIL=$inp
-                break;
-            fi
-        done        
-        printf "\nTKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL" >> /root/.env
-        
-        export $(cat /root/.env | xargs)
 
-        printf "\n\n\nexecuting ssh-keygen which email $TKG_ADMIN_EMAIL...\n"
+        printf "\n\n\nexecuting ssh-keygen with email $TKG_ADMIN_EMAIL...\n"
         ssh-keygen -f ~/.ssh/tkg_rsa -t rsa -b 4096 -C "$TKG_ADMIN_EMAIL"
         printf "\nDONE.\n"
     else 
@@ -97,7 +102,7 @@ function tkginstall() {
         then
             returnOrexit || return 1
         fi
-        source $HOME/binaries/bastionhostmanagementsetup.sh
+        source $HOME/binaries/bastion/bastionhostmanagementsetup.sh
         auto_tkginstall
     else
         printf "\n\n\n Here's your public key in ~/.ssh/id_rsa.pub:\n"

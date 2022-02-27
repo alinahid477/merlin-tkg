@@ -19,15 +19,11 @@ then
     printf "\n\n"
 fi
 
-ISINSTALLED=$(find ~/.local/share/tanzu-cli/* -printf '%f\n' | grep management-cluster)
-if [[ -z $ISINSTALLED ]]
-then
-    printf "\n\ntanzu plugin management-cluster not found. installing...\n\n" >> logs/bastioninitlog.log
-    source $HOME/binaries/scripts/install-tanzu-cli.sh
-    installTanzuCLI
-    printf "DONE\n\n\n"
-    printf "\n\n"
-fi
+printf "\nInstalling tanzu..."
+source $HOME/binaries/scripts/install-tanzu-cli.sh
+installTanzuCLI
+printf "DONE\n\n\n"
+printf "\n\n"
 
 tanzu plugin list
 

@@ -2,7 +2,7 @@
 export $(cat /root/.env | xargs)
 
 remoteDIR="~/merlin/merlin-tkg"
-remoteDockerName="merlin-tkg"
+remoteDockerName="merlin-tkg-remote"
 localBastionDIR=$HOME/binaries/bastion
 localDockerContextName="merlin-bastion-docker-tkg"
 
@@ -57,20 +57,22 @@ function prechecks () {
 
 
 function prepareRemote () {
-    printf "\nPreparing $BASTION_USERNAME@$BASTION_HOST for merlin\n"
+    printf "\n\n\n********Preparing $BASTION_USERNAME@$BASTION_HOST for merlin*********\n\n\n"
 
     isexist=$(ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls -l '$remoteDIR)
     if [[ -z $isexist ]]
     then
         printf "\nCreating directory 'merlin' in $BASTION_USERNAME@$BASTION_HOST home dir"
-        ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'mkdir -p '$remoteDIR'/binaries'
-        ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'mkdir -p '$remoteDIR'/.ssh'
+        ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'mkdir -p '$remoteDIR'/binaries' || returnOrexit || return 1
+        ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'mkdir -p '$remoteDIR'/.ssh' || returnOrexit || return 1
     fi
+    
+
 
     printf "\nGetting remote files list from $BASTION_USERNAME@$BASTION_HOST\n"
-    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls '$remoteDIR'/binaries/' > /tmp/bastionhostbinaries.txt
-    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls '$remoteDIR'/' > /tmp/bastionhosthomefiles.txt
-    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls '$remoteDIR'/.ssh/' >> /tmp/bastionhosthomefiles.txt
+    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls '$remoteDIR'/binaries/' > /tmp/bastionhostbinaries.txt || returnOrexit || return 1
+    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls '$remoteDIR'/' > /tmp/bastionhosthomefiles.txt || returnOrexit || return 1
+    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'ls '$remoteDIR'/.ssh/' >> /tmp/bastionhosthomefiles.txt || returnOrexit || return 1
 
 
 
@@ -91,39 +93,40 @@ function prepareRemote () {
         tarfilenamingpattern="tce-*.tar.*"
         tanzuclibinary=$(ls $HOME/binaries/$tarfilenamingpattern)
     fi
-    isexist=$(cat /tmp/bastionhostbinaries.txt | grep -w $tanzuclibinary)
+    tanzuclibinaryfilename=$(echo ${tanzuclibinary##*/})
+    isexist=$(cat /tmp/bastionhostbinaries.txt | grep -w "^${tanzuclibinaryfilename}$")
     if [[ -z $isexist ]]
     then
         printf "\nUploading $tanzuclibinary\n"
-        scp $HOME/binaries/$tanzuclibinary $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/binaries/
+        scp $tanzuclibinary $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/binaries/ || returnOrexit || return 1
     fi
 
     isexist=$(cat /tmp/bastionhostbinaries.txt | grep -w "bastionhostinit.sh$")
     if [[ -z $isexist ]]
     then
         printf "\nUploading bastionhostinit.sh\n"
-        scp $localBastionDIR/bastionhostinit.sh $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/binaries/
+        scp $localBastionDIR/bastionhostinit.sh $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/binaries/ || returnOrexit || return 1
     fi
 
     isexist=$(cat /tmp/bastionhosthomefiles.txt | grep -w "bastionhostrun.sh$")
     if [[ -z $isexist ]]
     then
         printf "\nUploading bastionhostrun.sh\n"
-        scp $localBastionDIR/bastionhostrun.sh $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/
+        scp $localBastionDIR/bastionhostrun.sh $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/ || returnOrexit || return 1
     fi
 
     isexist=$(cat /tmp/bastionhosthomefiles.txt | grep -w "Dockerfile$")
     if [[ -z $isexist ]]
     then
         printf "\nUploading Dockerfile\n"
-        scp $localBastionDIR/Dockerfile $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/
+        scp $localBastionDIR/Dockerfile $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/ || returnOrexit || return 1
     fi
 
     isexist=$(cat /tmp/bastionhosthomefiles.txt | grep -w "dockerignore$")
     if [[ -z $isexist ]]
     then
         printf "\nUploading .dockerignore\n"
-        scp $HOME/.dockerignore $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/
+        scp $HOME/.dockerignore $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/ || returnOrexit || return 1
     fi
 
     isexist=$(ls ~/.ssh/tkg_rsa)
@@ -131,31 +134,34 @@ function prepareRemote () {
     if [[ -n $isexist && -z $isexistidrsa ]]
     then
         printf "\nUploading .ssh/tkg_rsa\n"
-        scp $HOME/.ssh/tkg_rsa $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/.ssh/id_rsa
+        scp $HOME/.ssh/tkg_rsa $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/.ssh/id_rsa || returnOrexit || return 1
     fi
 
     if [[ -n $MANAGEMENT_CLUSTER_CONFIG_FILE ]]
     then
         printf "\nUploading $MANAGEMENT_CLUSTER_CONFIG_FILE\n"
-        scp $MANAGEMENT_CLUSTER_CONFIG_FILE $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/
+        scp $MANAGEMENT_CLUSTER_CONFIG_FILE $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/ || returnOrexit || return 1
     fi
 }
 
 
 function startTKGCreate () {
-    printf "\nStarting remote docker with tanzu cli...\n"
-    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'chmod +x '$remoteDIR'/bastionhostrun.sh && '$remoteDIR'/bastionhostrun.sh '$DOCKERHUB_USERNAME $DOCKERHUB_PASSWORD
+    printf "\n\n\n**********Starting remote docker with tanzu cli...*********\n\n\n"
+    ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'chmod +x '$remoteDIR'/bastionhostrun.sh && '$remoteDIR'/bastionhostrun.sh '$DOCKERHUB_USERNAME $DOCKERHUB_PASSWORD $remoteDockerName
 
 
-    printf "\nCreating remote context...\n"
-    isexist=$(docker context ls | grep "$localDockerContextName$")
+    isexist=$(docker context ls | grep "^$localDockerContextName")
     if [[ -z $isexist ]]
     then
-        docker context create $localDockerContextName  --docker "host=ssh://$BASTION_USERNAME@$BASTION_HOST"
+        printf "\nCreating remote context $localDockerContextName..."
+        docker context create $localDockerContextName  --docker "host=ssh://$BASTION_USERNAME@$BASTION_HOST" || returnOrexit || return 1
+        printf "COMPLETED\n"
     fi
+    
 
-    printf "\nUsing remote context...\n"
+    printf "\nUsing remote context $localDockerContextName..."
     export DOCKER_CONTEXT=$localDockerContextName
+    printf "COMPLETED\n"
 
     printf "\nWaiting 3s before checking remote container...\n"
     sleep 3
@@ -176,36 +182,44 @@ function startTKGCreate () {
     if [[ -z $isexist ]]
     then
         printf "\nERROR: Remote container $remoteDockerName not running."
-        printf "\nUnable to proceed further. Please check merling directory in your bastion host."
+        printf "\nUnable to proceed further. Please check merling directory in your bastion host.\n"
         returnOrexit || return 1
     fi
 
 
-    printf "\nPerforming ssh-add...\n"
-    docker exec -idt $remoteDockerName bash -c "cd ~ ; ssh-add ~/.ssh/id_rsa"
+    printf "\nPerforming ssh-add..."
+    docker exec -idt $remoteDockerName bash -c "cd ~ ; ssh-add ~/.ssh/id_rsa" || returnOrexit || return 1
+    printf "COMPLETED\n"
 
-    printf "\nStarting tanzu in remote context...\n"
+    printf "\nStarting tanzu in remote context..."
     if [[ -n $MANAGEMENT_CLUSTER_CONFIG_FILE ]]
     then
         # homepath=$(ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'pwd')
         filename=$(echo $MANAGEMENT_CLUSTER_CONFIG_FILE| rev | awk -v FS='/' '{print $1}' | rev)
-        printf "\nLaunching management cluster create using $MANAGEMENT_CLUSTER_CONFIG_FILE...\n"
-        docker exec -idt $remoteDockerName bash -c "cd ~ ; tanzu management-cluster create --file $remoteDIR/$filename -v 9"
+        printf "\nLaunching management cluster create using $MANAGEMENT_CLUSTER_CONFIG_FILE..."
+        docker exec -idt $remoteDockerName bash -c "cd ~ ; tanzu management-cluster create --file $remoteDIR/$filename -v 9" || returnOrexit || return 1
     else
-        printf "\nLaunching management cluster create using UI...\n"
-        docker exec -idt $remoteDockerName bash -c "cd ~ ; tanzu management-cluster create --ui -y -v 9 --browser none"
+        printf "\nLaunching management cluster create using UI..."
+        docker exec -idt $remoteDockerName bash -c "cd ~ ; tanzu management-cluster create --ui -y -v 9 --browser none" || returnOrexit || return 1
     fi
+    printf "COMPLETED\n"
 
-    chmod 0600 $HOME/.ssh/*
-    cp $HOME/.ssh/sshuttleconfig $HOME/.ssh/ssh_config
-    mv /etc/ssh/ssh_config /etc/ssh/ssh_config-default
-    ln -s $HOME/.ssh/ssh_config /etc/ssh/ssh_config
-
+    
+    if [[ ! -f  $HOME/.ssh/ssh_config ]]
+    then
+        printf "\nSetting up for sshuttle with bastion host..."
+        chmod 0600 $HOME/.ssh/*
+        cp $HOME/.ssh/sshuttleconfig $HOME/.ssh/ssh_config || returnOrexit || return 1 
+        # mv /etc/ssh/ssh_config /etc/ssh/ssh_config-default
+        # ln -s $HOME/.ssh/ssh_config /etc/ssh/ssh_config
+        printf "COMPLETED\n"
+    fi
+    
     export SSHUTTLE=true
     printf "\n\n\n"
-    echo "=> Establishing sshuttle with remote $BASTION_USERNAME@$BASTION_HOST...."
-    sshuttle --dns --python python2 -D -r $BASTION_USERNAME@$BASTION_HOST 0/0 -x $BASTION_HOST/32 --disable-ipv6 --listen 0.0.0.0:0
-    echo "=> DONE."
+    printf "=> Establishing sshuttle with remote $BASTION_USERNAME@$BASTION_HOST...."
+    sshuttle --dns --python python2 -D -r $BASTION_USERNAME@$BASTION_HOST 0/0 -x $BASTION_HOST/32 --disable-ipv6 --listen 0.0.0.0:0 || returnOrexit || return 1
+    printf "COMPLETED.\n"
 
 
     printf "\n\n\n Here's your public key in $HOME/.ssh/id_rsa.pub:\n"
@@ -218,7 +232,7 @@ function startTKGCreate () {
     dobreak='n'
     count=1
     while [[ $dobreak == 'n' && $count -lt 30 ]]; do
-        sleep 2m
+        sleep 3m
         printf "\nChecking progres...\n"
         ((count=count+1))
         if [[ $containercreated == 'n' ]]
@@ -313,7 +327,7 @@ function startTKGCreate () {
 
 
 function downloadTKGFiles () {
-    
+    printf "\n\n\n***********Downloading files from bastion host...***********\n\n\n"
 
     printf "\nDownloading management cluster configs from ~/.config/tanzu/tkg/clusterconfigs/...\n"
     cd ~
@@ -418,7 +432,7 @@ function downloadTKGFiles () {
 
 
 function cleanBastion () {
-
+    printf "\n\n\n***********crealing bastion host...***********\n\n\n"
     local confirmation='n'
     while true; do
         read -p "Confirm to continue? [yn] " yn

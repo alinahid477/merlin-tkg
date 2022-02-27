@@ -23,7 +23,7 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${
   && rm docker-${DOCKER_VERSION}.tgz
 
 
-COPY binaries/bastionhostinit.sh /usr/local/bastionhostinit.sh
+COPY bastionhostinit.sh /usr/local/bastionhostinit.sh
 RUN chmod +x /usr/local/bastionhostinit.sh
 
 
