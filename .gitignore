@@ -48,3 +48,4 @@ binaries/bastion/*
 !binaries/createakscluster.sh
 
 !binaries/templates
+sshuttle.pid
