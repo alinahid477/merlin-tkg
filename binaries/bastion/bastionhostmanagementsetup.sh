@@ -142,6 +142,8 @@ function prepareRemote () {
         printf "\nUploading $MANAGEMENT_CLUSTER_CONFIG_FILE\n"
         scp $MANAGEMENT_CLUSTER_CONFIG_FILE $BASTION_USERNAME@$BASTION_HOST:$remoteDIR/ || returnOrexit || return 1
     fi
+
+    return 0
 }
 
 
@@ -233,7 +235,7 @@ function startTKGCreate () {
     count=1
     while [[ $dobreak == 'n' && $count -lt 30 ]]; do
         sleep 3m
-        printf "\nChecking progres...\n"
+        printf "\nChecking progres...#$count\n"
         ((count=count+1))
         if [[ $containercreated == 'n' ]]
         then
@@ -274,8 +276,29 @@ function startTKGCreate () {
         then
             sleep 3
             printf "\nTKG management cluster should have been deployed...\n"
-            count=100
-            dobreak='y'
+            
+            local confirmation='y'
+            if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
+            then
+                while true; do
+                    read -p "Confirm to continue [yn]? " yn
+                    case $yn in
+                        [Yy]* ) printf "\nyou confirmed yes\n"; break;;
+                        [Nn]* ) confirmation='n'; printf "\nyou confirmed no\n"; break;;
+                        * ) echo "Please answer y when you are ready.";;
+                    esac
+                done
+            else
+                printf "\nGoing to wait for 1m\n"
+                sleep 1m
+            fi
+
+            if [[ $confirmation == 'y' ]]
+            then
+                count=100
+                dobreak='y'
+            fi
+            
         fi
     done
 
@@ -285,11 +308,18 @@ function startTKGCreate () {
     printf "\nWaiting 30s before shuttle shutdown...\n"
     sleep 30
 
-    printf "\nStopping sshuttle...\n"
+    printf "\nStopping sshuttle..."
     sshuttlepid=$(ps aux | grep "/usr/bin/sshuttle --dns" | awk 'FNR == 1 {print $2}')
-    kill $sshuttlepid
-    printf "==> DONE\n"
-    unset SSHUTTLE
+    if [[ -n $sshuttlepid ]]
+    then
+        kill $sshuttlepid && unset SSHUTTLE
+        if [[ -z $SSHUTTLE ]]
+        then
+            printf "COMPLETED\n"
+        else
+            printf "FAILED\n"
+        fi
+    fi
     sleep 2
 
 
@@ -306,8 +336,8 @@ function startTKGCreate () {
             esac
         done
     else
-        printf "\nGoing to wait for 1m\n"
-        sleep 1m
+        printf "\nGoing to wait for 2s\n"
+        sleep 2
     fi
 
     if [[ $confirmation == 'n' ]]
@@ -420,12 +450,12 @@ function downloadTKGFiles () {
     done
 
     # scp -r $BASTION_USERNAME@$BASTION_HOST:~/merlin/tkgonvsphere/.config/tanzu/tkg/clusterconfigs ~/.config/tanzu/tkg/
-    printf "==> DONE\n"
     sleep 2
+    printf "==> DONE\n"
     # sleep 10
     # tanzu cluster list
     # tanzu cluster kubeconfig get  --admin
-
+    return 0
 }
 
 
@@ -525,6 +555,8 @@ function cleanBastion () {
 
     printf "\n==> DONE\n"
     printf "\n==> Cleanup process complete....\n"
+
+    return 0
 }
 
 
@@ -533,10 +565,26 @@ function cleanBastion () {
 
 function auto_tkginstall () {
     prechecks
-    prepareRemote
-    startTKGCreate
-    downloadTKGFiles
-    cleanBastion
+    ret=$?
+    if [[ $ret == 0 ]]
+    then
+        prepareRemote
+        ret=$?
+        if [[ $ret == 0 ]]
+        then
+            startTKGCreate
+            ret=$?
+            if [[ $ret == 0 ]]
+            then
+                downloadTKGFiles
+                ret=$?
+                if [[ $ret == 0 ]]
+                then
+                    cleanBastion
+                fi        
+            fi            
+        fi    
+    fi   
 }
 
 
