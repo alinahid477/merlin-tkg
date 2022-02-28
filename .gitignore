@@ -30,6 +30,11 @@ binaries/*
 binaries/scripts/*
 !binaries/scripts/.gitkeep
 
+!binaries/tkc
+binaries/tkc/*
+!binaries/tkc/build-tkc-file.sh
+!binaries/tkc/generate-tkc-file.sh
+
 !binaries/bastion
 binaries/bastion/*
 !binaries/bastion/bastionhostmanagementsetup.sh

@@ -7,8 +7,9 @@ localBastionDIR=$HOME/binaries/bastion
 localDockerContextName="merlin-bastion-docker-tkg"
 
 function prechecks () {
-    printf "\nperforming prerequisites checks...\n"
+    printf "\n\n\n*********performing prerequisites checks************\n\n\n"
 
+    printf "checking presence of $HOME/.ssh/id_rsa...."
     isexist=$(ls $HOME/.ssh/id_rsa)
     if [[ -z $isexist ]]
     then
@@ -16,15 +17,18 @@ function prechecks () {
         printf "\nPlease ensure to place id_rsa file in .ssh directory and the id_rsa.pub in .ssh of $BASTION_USERNAME@$BASTION_HOST"
         returnOrexit || return 1
     fi
+    printf "FOUND\n"
 
+    printf "checking docker login information in environment variable called DOCKERHUB_USERNAME and DOCKERHUB_PASSWORD...."
     if [[ -z $DOCKERHUB_USERNAME || -z $DOCKERHUB_PASSWORD ]]
     then
         printf "\nERROR: Failed. docker hun username and password missing in env variable..."
         printf "\nPlease ensure DOCKERHUB_USERNAME and DOCKERHUB_PASSWORD in .env file"
         returnOrexit || return 1
     fi
+    printf "FOUND\n"
 
-    printf "\nChecking Docker on $BASTION_USERNAME@$BASTION_HOST...\n"
+    printf "\nChecking Docker on $BASTION_USERNAME@$BASTION_HOST..."
     isexist=$(ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'docker --version')
     if [[ -z $isexist ]]
     then
@@ -32,13 +36,13 @@ function prechecks () {
         printf "\nPlease install docker on host $BASTION_HOST to continue..."
         returnOrexit || return 1
     else
-        printf "\nDocker found: $isexist"
+        printf "FOUND.\nDetails: $isexist\n\n"
     fi
-    printf "\nChecking python3 on $BASTION_USERNAME@$BASTION_HOST...\n"
+    printf "\nChecking python3 on $BASTION_USERNAME@$BASTION_HOST...."
     isexist=$(ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'python3 --version')
     if [[ -z $isexist ]]
     then
-        printf "\npython3 not found. checking python on $BASTION_USERNAME@$BASTION_HOST..."
+        printf "python3 not found.\nchecking python on $BASTION_USERNAME@$BASTION_HOST...."
         isexist=$(ssh -i $HOME/.ssh/id_rsa $BASTION_USERNAME@$BASTION_HOST 'python3 --version')
         if [[ -z $isexist ]]
         then
@@ -46,10 +50,10 @@ function prechecks () {
             printf "\nPlease install Python on host $BASTION_HOST to continue..."
             returnOrexit || return 1
         else
-            printf "\nDocker found: $isexist"
+            printf "FOUND.\nDetails: $isexist\n\n"
         fi
     else
-        printf "\nPython found: $isexist"
+        printf "FOUND\nDetails: $isexist\n\n"
     fi
 
     return 0
@@ -202,6 +206,7 @@ function startTKGCreate () {
         docker exec -idt $remoteDockerName bash -c "cd ~ ; tanzu management-cluster create --file $remoteDIR/$filename -v 9" || returnOrexit || return 1
     else
         printf "\nLaunching management cluster create using UI..."
+        printf "\nDEBUG docker exec -idt $remoteDockerName bash -c \"cd ~ ; tanzu management-cluster create --ui -y -v 9 --browser none\" || returnOrexit || return 1"
         docker exec -idt $remoteDockerName bash -c "cd ~ ; tanzu management-cluster create --ui -y -v 9 --browser none" || returnOrexit || return 1
     fi
     printf "COMPLETED\n"
@@ -478,42 +483,48 @@ function cleanBastion () {
         returnOrexit || return 1
     fi
 
-    printf "\nCleanup bastion's docker...\n"
+    printf "\nCleanup bastion's docker..."
     sleep 2
     containerid=$(docker ps -aqf "name=^$remoteDockerName$" || printf "")
     count=1
     while [[ -z $containerid && $count -lt 5 ]]; do
-        printf "failed. retrying in 5s...\n"
+        printf "\nfailed to find container id. retrying in 5s...#$count"
         sleep 5
         containerid=$(docker ps -aqf "name=^$remoteDockerName$" || printf "")
         ((count=count+1))
     done
+    printf "\nDocker container found $remoteDockerName=$containerid. Stopping container..."
     error='n'
     docker container stop $containerid || error='y' 
     count=1
     while [[ $error == 'y' && $count -lt 5 ]]; do
-        printf "failed. retrying in 5s...\n"
+        printf "\nfailed to stop container $containerid. retrying in 5s...#$count"
         sleep 5
         error='n'
         docker container stop $containerid || error='y' 
         ((count=count+1))
     done
-    printf "\nStopped container..."
+    printf "\nDocker container $remoteDockerName stoppped."
+
+    printf "\nRemoving container $containerid...."
     docker container rm $containerid
     sleep 2
     docker container rm $(docker container ls --all -q)
-    printf "\nRemoved container image..."
+    
+    printf "\nFreeing up space..."
     sleep 2
     docker volume prune -f
-    printf "\nFreeing up space..."
+    
+    printf "\nRemoving dangling images...."
     sleep 2
     docker rmi -f $(docker images -f "dangling=true" -q)
     sleep 2
     docker rmi -f $(docker images -q)
-    printf "\nRemoved docker images..."
+    printf "\nRemoved docker images...\n"
 
-
+    printf "\nReseting docker context...."
     unset DOCKER_CONTEXT
+    printf "COMPLETED\n"
 
     # printf "\n\n"
     # printf "\nDuring the installation process Tanzu CLI created few files in the bastion host under directory ~/merlin of user $BASTION_USERNAME"
