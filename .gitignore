@@ -32,7 +32,7 @@ binaries/scripts/*
 
 !binaries/tkc
 binaries/tkc/*
-!binaries/tkc/build-tkc-file.sh
+!binaries/tkc/build-deployment-file.sh
 !binaries/tkc/generate-tkc-file.sh
 
 !binaries/bastion
