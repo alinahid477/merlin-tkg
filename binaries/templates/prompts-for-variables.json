@@ -1,0 +1,161 @@
+[
+    {
+        "name": "<AZURE_CLIENT_ID>",
+        "hint": "Azure tenant id",
+        "defaultvaluekey": "AZURE_CLIENT_ID"
+    },
+    {
+        "name": "<AZURE_CLIENT_SECRET>",
+        "hint": "Azure client secret",
+        "defaultvaluekey": "AZURE_CLIENT_SECRET"
+    },
+    {
+        "name": "<AZURE_SSH_PUBLIC_KEY_B64>",
+        "hint": "ssh public key (should come from management cluster config file)",
+        "defaultvaluekey": "AZURE_SSH_PUBLIC_KEY_B64"
+    },
+    {
+        "name": "<AZURE_SUBSCRIPTION_ID>",
+        "hint": "Azure subscription id",
+        "defaultvaluekey": "AZURE_SUBSCRIPTION_ID"
+    },
+    {
+        "name": "<AZURE_TENANT_ID>",
+        "hint": "Azure tenant id",
+        "defaultvaluekey": "AZURE_TENANT_ID"
+    },
+    {
+        "name": "<AZURE_CUSTOM_TAGS>",
+        "hint": "Custom tags for Azure resources",
+        "defaultvaluekey": "AZURE_TENANT_ID"
+    },
+    {
+        "name": "<AZURE_ENVIRONMENT>",
+        "hint": "Available options are: AzurePublicCloud, AzureChinaCloud, AzureGermanCloud, AzureUSGovernmentCloud",
+        "options": ["AzurePublicCloud", "AzureChinaCloud", "AzureGermanCloud", "AzureUSGovernmentCloud"],
+        "defaultvalue": "AzurePublicCloud"
+    },
+    {
+        "name": "<AZURE_LOCATION>",
+        "hint": "Azure location",
+        "defaultvaluekey": "AZURE_LOCATION"
+    },
+    {
+        "name": "<AZURE_RESOURCE_GROUP>",
+        "hint": "Azure resource group",
+        "defaultvaluekey": "AZURE_RESOURCE_GROUP"
+    },
+    {
+        "name": "<AZURE_ENABLE_PRIVATE_CLUSTER>",
+        "hint": "Do you like to enable private cluster (default: false)",
+        "options": ["true","false"],
+        "defaultvalue": "false",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<AZURE_FRONTEND_PRIVATE_IP>",
+        "hint": "Set this if AZURE_ENABLE_PRIVATE_CLUSTER is true and you want to override the default internal load balancer address of 10.0.0.100",
+        "andconditions": ["AZURE_ENABLE_PRIVATE_CLUSTER=true"],
+        "defaultvalue": "10.0.0.100",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<AZURE_VNET_CIDR>",
+        "hint": "Optional, set if you want to deploy the cluster to a new VNET and subnets and override the default values. By default, AZURE_VNET_CIDR is set to 10.0.0.0/16",
+        "defaultvaluekey": "AZURE_VNET_CIDR",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<AZURE_CONTROL_PLANE_SUBNET_CIDR>",
+        "hint": "Optional, set if you want to deploy the cluster to a new VNET and subnets and override the default values. By default, AZURE_CONTROL_PLANE_SUBNET_CIDR to 10.0.0.0/24",
+        "defaultvaluekey": "AZURE_CONTROL_PLANE_SUBNET_CIDR",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<AZURE_NODE_SUBNET_CIDR>",
+        "hint": "Optional, set if you want to deploy the cluster to a new VNET and subnets and override the default values. By default, AZURE_NODE_SUBNET_CIDR to 10.0.1.0/24.",
+        "defaultvaluekey": "AZURE_NODE_SUBNET_CIDR",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<AZURE_VNET_NAME>",
+        "hint": "Optional, set if you want to deploy the cluster to an existing VNET and subnets or assign names to a new VNET and subnets.",
+        "defaultvaluekey": "AZURE_VNET_NAME"
+    },
+    {
+        "name": "<AZURE_VNET_RESOURCE_GROUP>",
+        "hint": "Optional, set if you want to deploy the cluster to an existing VNET and subnets or assign names to a new VNET and subnets.",
+        "defaultvaluekey": "AZURE_VNET_RESOURCE_GROUP"
+    },
+    {
+        "name": "<AZURE_CONTROL_PLANE_SUBNET_NAME>",
+        "hint": "Optional, set if you want to deploy the cluster to an existing VNET and subnets or assign names to a new VNET and subnets.",
+        "defaultvaluekey": "AZURE_CONTROL_PLANE_SUBNET_NAME"
+    },
+    {
+        "name": "<AZURE_NODE_SUBNET_NAME>",
+        "hint": "Optional, set if you want to deploy the cluster to an existing VNET and subnets or assign names to a new VNET and subnets.",
+        "defaultvaluekey": "AZURE_NODE_SUBNET_NAME"
+    },
+    {
+        "name": "<AZURE_CONTROL_PLANE_MACHINE_TYPE>",
+        "hint": "Optional, set if you want to override the default value. The default value is Standard_D2s_v3.",
+        "defaultvalue": "Standard_D2s_v3"
+    },
+    {
+        "name": "<AZURE_NODE_MACHINE_TYPE>",
+        "hint": "Optional, set if you want to override the default value. An Azure VM size for the worker node VMs, chosen to fit expected workloads. The default value is Standard_D2s_v3",
+        "defaultvalue": "Standard_D2s_v3"
+    },
+
+
+
+    {
+        "name": "<INFRASTRUCTURE_PROVIDER>",
+        "hint": "Options are: vsphere, aws, azure, or tkg-service-vsphere",
+        "options": ["vsphere", "aws", "azure","tkg-service-vsphere"],
+        "defaultvaluekey": "INFRASTRUCTURE_PROVIDER",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<CLUSTER_NAME>",
+        "hint": "This name must comply with DNS hostname",
+        "defaultvaluekey": "CLUSTER_NAME",
+        "skip_promt": "true"
+    },
+    {
+        "name": "<CLUSTER_PLAN>",
+        "hint": "Required. Set to dev, prod, or a custom plan. The dev plan deploys a cluster with a single control plane node. The prod plan deploys a highly available cluster with three control plane nodes.",
+        "defaultvaluekey": "CLUSTER_PLAN"
+    },
+    {
+        "name": "<CLUSTER_CIDR>",
+        "hint": "Optional, set if you want to override the default value. The CIDR range to use for pods. By default, this range is set to 100.96.0.0/11.",
+        "defaultvalue": "100.96.0.0/11"
+    },
+    {
+        "name": "<SERVICE_CIDR>",
+        "hint": "Optional, set if you want to override the default value. The CIDR range to use for the Kubernetes services. By default, this range is set to 100.64.0.0/13",
+        "defaultvalue": "100.96.0.0/11"
+    },
+    {
+        "name": "<CONTROL_PLANE_MACHINE_COUNT>",
+        "hint": "Deploy a Tanzu Kubernetes cluster with more control plane nodes than the dev and prod plans define by default. The number of control plane nodes that you specify must be odd."
+    },
+    {
+        "name": "<WORKER_MACHINE_COUNT>",
+        "hint": "Deploy a Tanzu Kubernetes cluster with more worker nodes than the dev and prod plans define by default."
+    },
+    {
+        "name": "<OS_NAME>",
+        "hint": "Node VM OS. Options are: ubuntu, photon, amazon",
+        "options": ["ubuntu", "photon", "amazon"],
+        "defaultvaluekey": "OS_NAME"
+    },
+    {
+        "name": "<OS_VERSION>",
+        "hint": "Version for OS_NAME OS. Defaults to 20.04 for Ubuntu. Can be 3 for Photon on vSphere and 2 for Amazon Linux on Amazon EC2",
+        "options": ["20.04", "3", "2"],
+        "defaultvaluekey": "OS_VERSION"
+    },
+]

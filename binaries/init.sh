@@ -2,7 +2,8 @@
 
 export $(cat /root/.env | xargs)
 
-if [ ! -f "$HOME/binaries/scripts/install-tanzu-cli.sh" ]
+
+if [ ! -f "$HOME/binaries/scripts/returnOrexit.sh" ]
 then
     if [[ ! -d  "$HOME/binaries/scripts" ]]
     then
@@ -11,7 +12,7 @@ then
     printf "\n\n************Downloading Common Scripts**************\n\n"
     curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o /tmp/download-common-scripts.sh
     chmod +x /tmp/download-common-scripts.sh
-    ./tmp/download-common-scripts.sh all $HOME/binaries/scripts/
+    ./tmp/download-common-scripts.sh all $HOME/binaries/scripts/ "tkg"
     sleep 1
     printf "setting executable permssion common scripts..."    
     ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
