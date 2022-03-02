@@ -12,12 +12,11 @@
 .docker
 tanzu
 .m2
-.redhat
 .sts4
 .tilt-dev
 .vscode
 .vscode-server
-
+.kube-tkg
 
 .ssh/*
 !.ssh/.gitkeep

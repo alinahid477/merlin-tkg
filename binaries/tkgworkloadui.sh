@@ -8,7 +8,7 @@ source $HOME/binaries/scripts/generate-tkg-file.sh
 
 function launchUI () {
     local yellowcolor=$(tput setaf 3)
-    local magentacolor=$(tput setaf 5)
+    local redcolor=$(tput setaf 1)
     local normalcolor=$(tput sgr0)
 
     printf "\n\n*******Starting TKG workload cluster wizard*******\n\n"
@@ -17,7 +17,7 @@ function launchUI () {
     ret=$?
     if [[ $ret != 0 || -z $CLUSTER_NAME ]]
     then
-        printf "\n${magentacolor}ERROR: error occured generating config file for workload cluster.${normalcolor}\n"
+        printf "\n${redcolor}ERROR: error occured generating config file for workload cluster.${normalcolor}\n"
         return 1        
     fi
 
