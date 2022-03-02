@@ -136,7 +136,7 @@ function tkginstall() {
     # printf "\nCOMPLETE=YES" >> /root/.env
 
 
-    printf "\n\n\nRUN ~/binaries/tkgworkloadwizard.sh --help to start creating workload clusters.\n\n\n"
+    printf "\n\n\nRUN ~/binaries/tkgworkloadui.sh --help to start creating workload clusters.\n\n\n"
 }
 
 

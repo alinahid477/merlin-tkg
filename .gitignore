@@ -45,12 +45,7 @@ binaries/bastion/*
 
 !binaries/init.sh
 !binaries/tkginstall.sh
-
-
-!binaries/installprofile.sh
-!binaries/generate-profile-file.sh
-!binaries/installdevnamespace.sh
-!binaries/createakscluster.sh
+!binaries/tkgworkloadui.sh
 
 !binaries/templates
 sshuttle.pid
