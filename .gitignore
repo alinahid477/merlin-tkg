@@ -17,6 +17,8 @@ tanzu
 .vscode
 .vscode-server
 .kube-tkg
+workload-clusters/*
+!workload-clusters/.gitkeep
 
 .ssh/*
 !.ssh/.gitkeep
@@ -48,3 +50,5 @@ binaries/bastion/*
 
 !binaries/templates
 sshuttle.pid
+
+

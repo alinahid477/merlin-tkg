@@ -12,7 +12,8 @@
     {
         "name": "<AZURE_SSH_PUBLIC_KEY_B64>",
         "hint": "ssh public key (should come from management cluster config file)",
-        "defaultvaluekey": "AZURE_SSH_PUBLIC_KEY_B64"
+        "defaultvaluekey": "AZURE_SSH_PUBLIC_KEY_B64",
+        "use_special_replace": true
     },
     {
         "name": "<AZURE_SUBSCRIPTION_ID>",
@@ -135,7 +136,8 @@
         "name": "<VSPHERE_SSH_AUTHORIZED_KEY>",
         "hint": "Paste in the contents of the SSH public key that you created in Deploy a Management Cluster to vSphere.",
         "defaultvaluekey": "VSPHERE_SSH_AUTHORIZED_KEY",
-        "skip_prompt": true
+        "skip_prompt": true,
+        "use_special_replace": true
     },
     {
         "name": "<VSPHERE_DATACENTER>",
@@ -217,7 +219,8 @@
     {
         "name": "<CLUSTER_PLAN>",
         "hint": "Required. Set to dev, prod, or a custom plan. The dev plan deploys a cluster with a single control plane node. The prod plan deploys a highly available cluster with three control plane nodes.",
-        "defaultvaluekey": "CLUSTER_PLAN"
+        "defaultvaluekey": "CLUSTER_PLAN",
+        "optional": true
     },
     {
         "name": "<CONTROL_PLANE_MACHINE_COUNT>",
