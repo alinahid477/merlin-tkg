@@ -19,6 +19,7 @@
     },
     {
         "name": "autoscale",
+        "filename":"autoscaler.template",
         "prompt": "Would you like to autoscale this cluster?",
         "hint": "recommended if deploying it on public clouds as you pay by the resource"
     },
