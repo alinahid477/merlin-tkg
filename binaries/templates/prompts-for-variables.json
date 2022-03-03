@@ -192,7 +192,7 @@
     },
     {
         "name": "<CONTROLPLANE_SIZE>",
-        "hint": "Size for control plane node VMs."
+        "hint": "Size for control plane node VMs.\n\tFor vSphere, set\n\t   small (2 CPUs, 4 GB memory, 20 GB disk),\n\t    medium (2 CPUs, 8 GB memory, 40 GB disk),\n\t    large (4 CPUs, 16 GB memory, 40 GB disk),\n\t    extra-large (8 CPUs, 32 GB memory, 80 GB disk).\n\tFor Amazon EC2, set an instance type, eg: t3.small.\n\tFor Azure, set an instance type, eg: Standard_D2s_v3."
     },
     {
         "name": "<WORKER_SIZE>",
