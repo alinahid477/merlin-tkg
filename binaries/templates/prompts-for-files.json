@@ -13,8 +13,9 @@
         "prompt": "Type in the name of the network?",
         "options": ["nsxalb","nsxt","kubevip"],
         "hint": "possible values are: nsxalb, nsxt, kubevip",
-        "andconditions": [ "INFRASTRUCTURE_PROVIDER=vsphere" ],
-        "defaultoptionvalue": "vsphere"
+        "andconditions_forblock": [ "INFRASTRUCTURE_PROVIDER=vsphere" ],
+        "andconditions_forvalue": [ "AVI_ENABLE=true" ],
+        "defaultvalue": "nsxalb"
     },
     {
         "name": "autoscale",
