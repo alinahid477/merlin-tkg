@@ -10,3 +10,4 @@
 .kube-tkg
 .config
 .cache
+*.tar.*

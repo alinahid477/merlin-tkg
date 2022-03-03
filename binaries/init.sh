@@ -10,9 +10,9 @@ then
         mkdir -p $HOME/binaries/scripts
     fi
     printf "\n\n************Downloading Common Scripts**************\n\n"
-    curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o /tmp/download-common-scripts.sh
-    chmod +x /tmp/download-common-scripts.sh
-    ./tmp/download-common-scripts.sh all $HOME/binaries/scripts/ "tkg"
+    curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o $HOME/binaries/scripts/download-common-scripts.sh
+    chmod +x $HOME/binaries/scripts/download-common-scripts.sh
+    $HOME/binaries/scripts/download-common-scripts.sh tkg $HOME/binaries/scripts/
     sleep 1
     printf "setting executable permssion common scripts..."    
     ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
