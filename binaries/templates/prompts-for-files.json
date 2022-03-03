@@ -15,7 +15,7 @@
         "hint": "possible values are: nsxalb, nsxt, kubevip",
         "andconditions_forblock": [ "INFRASTRUCTURE_PROVIDER=vsphere" ],
         "andconditions_forvalue": [ "AVI_ENABLE=true" ],
-        "defaultvalue": "nsxalb"
+        "defaultoptionvalue": "nsxalb"
     },
     {
         "name": "autoscale",
