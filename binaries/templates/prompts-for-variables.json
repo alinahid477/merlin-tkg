@@ -190,15 +190,50 @@
         "defaultvaluekey": "VSPHERE_PASSWORD",
         "skip_prompt": true
     },
+
+
+
+
     {
         "name": "<CONTROLPLANE_SIZE>",
-        "hint": "Size for control plane node VMs.\n\tFor vSphere, set\n\t   small (2 CPUs, 4 GB memory, 20 GB disk),\n\t    medium (2 CPUs, 8 GB memory, 40 GB disk),\n\t    large (4 CPUs, 16 GB memory, 40 GB disk),\n\t    extra-large (8 CPUs, 32 GB memory, 80 GB disk).\n\tFor Amazon EC2, set an instance type, eg: t3.small.\n\tFor Azure, set an instance type, eg: Standard_D2s_v3."
+        "hint": "Size for control plane node VMs.\n\tFor vSphere, set\n\t    small (2 CPUs, 4 GB memory, 20 GB disk),\n\t    medium (2 CPUs, 8 GB memory, 40 GB disk),\n\t    large (4 CPUs, 16 GB memory, 40 GB disk),\n\t    extra-large (8 CPUs, 32 GB memory, 80 GB disk).\n\tFor Amazon EC2, set an instance type, eg: t3.small.\n\tFor Azure, set an instance type, eg: Standard_D2s_v3."
     },
     {
         "name": "<WORKER_SIZE>",
         "hint": "Size for worker node VMs."
     },
 
+    {
+        "name": "<VSPHERE_CONTROL_PLANE_NUM_CPUS>",
+        "hint": "vCPU count for each control plane node",
+        "defaultvalue": "2"
+    },
+    {
+        "name": "<VSPHERE_CONTROL_PLANE_DISK_GIB>",
+        "hint": "Disk size in GiB for each control plane node",
+        "defaultvalue": "40"
+    },
+    {
+        "name": "<VSPHERE_CONTROL_PLANE_MEM_MIB>",
+        "hint": "Memory for in MiB for each control plane node. (eg: 4096 MiB = 4 GiB)",
+        "defaultvalue": "4096"
+    },
+    {
+        "name": "<VSPHERE_WORKER_NUM_CPUS>",
+        "hint": "vCPU count for each worker node",
+        "defaultvalue": "2"
+    },
+    {
+        "name": "<VSPHERE_WORKER_DISK_GIB>",
+        "hint": "Disk size in GiB for each worker node",
+        "defaultvalue": "40"
+    },
+    {
+        "name": "<VSPHERE_WORKER_MEM_MIB>",
+        "hint": "Memory for in MiB for each worker node. (eg: 4096 MiB = 4 GiB)",
+        "defaultvalue": "4096"
+    },
+    
 
 
 
@@ -217,10 +252,23 @@
         "skip_prompt": true
     },
     {
+        "name": "<IDENTITY_MANAGEMENT_TYPE>",
+        "hint": "Identity provider potocol. Optiona are: oidc, ldap, none",
+        "options": ["iodc", "ldap", "none"],
+        "defaultvaluekey": "IDENTITY_MANAGEMENT_TYPE",
+        "skip_prompt": true
+    },
+    {
         "name": "<CLUSTER_PLAN>",
         "hint": "Required. Set to dev, prod, or a custom plan. The dev plan deploys a cluster with a single control plane node. The prod plan deploys a highly available cluster with three control plane nodes.",
         "defaultvaluekey": "CLUSTER_PLAN",
         "optional": true
+    },
+    {
+        "name": "<CNI>",
+        "hint": "Container network interface is for k8s internal networking. Options are: antrea, calico",
+        "options": ["antrea", "calico"],
+        "defaultvalue": "antrea"
     },
     {
         "name": "<CONTROL_PLANE_MACHINE_COUNT>",

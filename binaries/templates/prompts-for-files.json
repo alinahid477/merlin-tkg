@@ -18,6 +18,14 @@
         "defaultoptionvalue": "nsxalb"
     },
     {
+        "name": "nodesize",
+        "filename":"#-nodesize-$.template",
+        "prompt": "What level of details you would like for configuring k8s nodes?",
+        "options": ["basic","advanced"],
+        "hint": "If you choose basic then during node configuration you can select templated values (eg: medium, small etc).\nAlternatively choosing advanced will let you define cpu, memory and disk size individually.\nPossible values are: basic, advanced",
+        "defaultoptionvalue": "basic"
+    },
+    {
         "name": "autoscale",
         "filename":"autoscaler.template",
         "prompt": "Would you like to autoscale this cluster?",
