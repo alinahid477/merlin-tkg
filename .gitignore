@@ -31,10 +31,9 @@ binaries/*
 binaries/scripts/*
 !binaries/scripts/.gitkeep
 
-!binaries/tkc
-binaries/tkc/*
-!binaries/tkc/build-deployment-file.sh
-!binaries/tkc/generate-tkc-file.sh
+binaries/tkc
+
+!binaries/clouds
 
 !binaries/bastion
 binaries/bastion/*
