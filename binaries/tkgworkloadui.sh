@@ -21,7 +21,8 @@ function launchUI () {
         return 1        
     fi
 
-    printf "\nReview and confirm generated Workload cluster config file: ${yellowcolor}$HOME/workload-clusters/tkg-$CLUSTER_NAME.yaml.${normalcolor}\n"
+    local tkcconfigfile="$HOME/workload-clusters/tkg-$CLUSTER_NAME.yaml"
+    printf "\nReview and confirm generated Workload cluster config file: ${yellowcolor}$tkcconfigfile.${normalcolor}\n"
     
     local confirmation=''
     while true; do
@@ -33,8 +34,17 @@ function launchUI () {
         esac
     done
     
+    if [[ $confirmation == 'y' ]]
+    then
 
-    printf "Executing tanzu clauster create using file ${yellowcolor}$HOME/workload-clusters/tkg-$CLUSTER_NAME.yaml.${normalcolor}....\n"
+        local INFRASTRUCTURE_PROVIDER=$(cat $tkcconfigfile | sed -r 's/[[:alnum:]]+=/\n&/g' | awk -F: '$1=="INFRASTRUCTURE_PROVIDER"{print $2}' | xargs)
+        if [[ -n $INFRASTRUCTURE_PROVIDER ]]
+        then
+            source $HOME/scripts/clouds/$INFRASTRUCTURE_PROVIDER/deploy-tkc.sh
+            deployTKC $tkcconfigfile || returnOrexit || return 1
+        fi
+    fi
+
 }
 
 launchUI

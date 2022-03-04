@@ -12,11 +12,16 @@ then
     printf "\n\n************Downloading Common Scripts**************\n\n"
     curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o $HOME/binaries/scripts/download-common-scripts.sh
     chmod +x $HOME/binaries/scripts/download-common-scripts.sh
-    $HOME/binaries/scripts/download-common-scripts.sh tkg $HOME/binaries/scripts/
+    $HOME/binaries/scripts/download-common-scripts.sh tkg scripts
     sleep 1
-    printf "setting executable permssion common scripts..."    
-    ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
-    printf "COMPLETED"
+    $HOME/binaries/scripts/download-common-scripts.sh clouds.vmware scripts/clouds/vmware
+    sleep 1
+    if [[ -n $BASTION_HOST ]]
+    then
+        $HOME/binaries/scripts/download-common-scripts.sh bastion scripts/bastion
+        sleep 1
+    fi
+    printf "\n\n\n///////////// COMPLETED //////////////////\n\n\n"
     printf "\n\n"
 fi
 

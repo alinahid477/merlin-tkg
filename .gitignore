@@ -40,6 +40,7 @@ binaries/bastion/*
 !binaries/bastion/bastionhostmanagementsetup.sh
 !binaries/bastion/bastionhostinit.sh
 !binaries/bastion/bastionhostrun.sh
+!binaries/bastion/bastionhostworkloadsetup.sh
 !binaries/bastion/Dockerfile
 
 

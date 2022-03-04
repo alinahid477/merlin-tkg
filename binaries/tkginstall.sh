@@ -102,7 +102,7 @@ function tkginstall() {
         then
             returnOrexit || return 1
         fi
-        source $HOME/binaries/bastion/bastionhostmanagementsetup.sh
+        source $HOME/binaries/scripts/bastion/bastionhostmanagementsetup.sh
         auto_tkginstall
     else
         printf "\n\n\n Here's your public key in ~/.ssh/id_rsa.pub:\n"
