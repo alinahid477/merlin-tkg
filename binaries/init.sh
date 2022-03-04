@@ -14,7 +14,7 @@ then
     chmod +x $HOME/binaries/scripts/download-common-scripts.sh
     $HOME/binaries/scripts/download-common-scripts.sh tkg scripts
     sleep 1
-    $HOME/binaries/scripts/download-common-scripts.sh clouds.vmware scripts/clouds/vmware
+    $HOME/binaries/scripts/download-common-scripts.sh clouds.vsphere scripts/clouds/vsphere
     sleep 1
     if [[ -n $BASTION_HOST ]]
     then
