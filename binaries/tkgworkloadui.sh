@@ -50,6 +50,8 @@ function launchUI () {
         then
             source $HOME/binaries/scripts/clouds/$INFRASTRUCTURE_PROVIDER/deploy-tkc.sh
             deployTKC $tkcconfigfile || returnOrexit || return 1
+        else
+            printf "\n${redcolor}ERROR: INFRASTRUCTURE_PROVIDER information is missing from the config file${normalcolor}\n"
         fi
     fi
 
