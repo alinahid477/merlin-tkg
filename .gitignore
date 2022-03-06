@@ -35,18 +35,10 @@ binaries/tkc
 
 !binaries/clouds
 
-!binaries/bastion
-binaries/bastion/*
-!binaries/bastion/bastionhostmanagementsetup.sh
-!binaries/bastion/bastionhostinit.sh
-!binaries/bastion/bastionhostrun.sh
-!binaries/bastion/bastionhostworkloadsetup.sh
-!binaries/bastion/Dockerfile
-
-
 !binaries/init.sh
 !binaries/tkginstall.sh
 !binaries/tkgworkloadui.sh
+!binaries/patch-nsxalb.sh
 
 !binaries/templates
 sshuttle.pid

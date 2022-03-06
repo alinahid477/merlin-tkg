@@ -17,7 +17,7 @@ if "%name%" == "forcebuild" (
 
 if "%name%" == "" (
     echo "assuming default name is: merlin-tkgonvsphere"
-    set name="merlin-tkgonvsphere"
+    set name="merlin-tkg"
 )
 
 
@@ -44,31 +44,6 @@ if %count% NEQ 1 (
     EXIT /B 0
 )
 
-set dodockercopy="no"
-if exist Dockerfile (
-	isexist="Dockerfile"
-) else (
-	dodockercopy="yes"
-)
-if exist binaries/Dockerfile (
-	isexist2="binaries/Dockerfile"
-) else (
-	dodockercopy="yes"
-)
-
-if "%dodockercopy%" == "yes" (
-	set tanzubundlename=
-	for %%x in (binaries/*.tar.*) do set tanzubundlename=%%x
-	if "%tanzubundlename:~0,3%" == "tce" (
-		echo "tce detected"
-		copy Dockerfile.tce0.9.1 Dockerfile
-		copy binaries/Dockerfile.tce0.9.1 binaries/Dockerfile
-	) ELSE (
-		echo "tkg detected"
-		copy Dockerfile.tkg1.4 Dockerfile
-		copy binaries/Dockerfile.tkg1.4 binaries/Dockerfile
-	)
-)
 	
 endlocal
 
