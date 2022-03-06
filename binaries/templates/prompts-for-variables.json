@@ -293,7 +293,7 @@
     {
         "name": "<SERVICE_CIDR>",
         "hint": "Optional, set if you want to override the default value. The CIDR range to use for the Kubernetes services. By default, this range is set to 100.64.0.0/13",
-        "defaultvalue": "100.96.0.0/11",
+        "defaultvalue": "100.64.0.0/13",
         "optional": true
     },
     {

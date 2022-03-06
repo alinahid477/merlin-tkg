@@ -103,7 +103,7 @@ function tkginstall() {
             returnOrexit || return 1
         fi
         source $HOME/binaries/scripts/bastion/bastionhostmanagementsetup.sh
-        auto_tkginstall
+        auto_tkginstall || returnOrexit || return 1
     else
         printf "\n\n\n Here's your public key in ~/.ssh/id_rsa.pub:\n"
         cat ~/.ssh/tkg_rsa.pub
@@ -137,6 +137,8 @@ function tkginstall() {
 
 
     printf "\n\n\nRUN ~/binaries/tkgworkloadui.sh --help to start creating workload clusters.\n\n\n"
+
+    return 0
 }
 
 
@@ -149,3 +151,14 @@ do
 done
 
 tkginstall
+ret=$?
+if [[ $ret == 0 ]]
+then
+    if [[ -f $HOME/.kube-tkg/config ]]
+    then
+        printf "\n\n************Connecting Tanzu Management to k8s**************\n\n"
+        source $HOME/binaries/scripts/tanzu_connect.sh
+        tanzu_connect_and_confirm
+        printf "DONE\n\n\n"
+    fi
+fi
