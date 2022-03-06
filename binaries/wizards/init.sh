@@ -47,10 +47,7 @@ then
     printf "DONE\n\n\n"
 fi
 
-printf "\n\n\nYour available wizards are:\n"
-echo -e "\t~/binaries/tkginstall.sh --help"
-echo -e "\t~/binaries/tkgworkloadwizard.sh --help"
-echo -e "\t~/binaries/tkgconnect.sh --help"
+printf "\n\n\n${greencolor}RUN tkgui --help for details on how to use this UI${normalcolor}\n"
 
 cd ~
 

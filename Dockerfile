@@ -46,7 +46,10 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${
 
 RUN curl -L https://carvel.dev/install.sh | bash
 
-COPY binaries/init.sh /usr/local/init.sh
+COPY binaries/wizards/tkgui.sh /usr/local/bin/tkgui
+RUN chmod +x /usr/local/bin/tkgui
+
+COPY binaries/wizards/init.sh /usr/local/init.sh
 RUN chmod +x /usr/local/init.sh
 
 # COPY binaries/tmc /usr/local/bin/
