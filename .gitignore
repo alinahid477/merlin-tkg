@@ -43,4 +43,5 @@ binaries/tkc
 !binaries/templates
 sshuttle.pid
 
+archives/*
 
