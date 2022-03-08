@@ -25,13 +25,12 @@ then
     printf "\n\n"
 fi
 
-source $HOME/binaries/scripts/returnOrexit.sh
-source $HOME/binaries/scripts/color-file.sh
-
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
-ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/wizards/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/templates/* | awk '{print $9}' | xargs chmod +x
 
+source $HOME/binaries/scripts/returnOrexit.sh
+source $HOME/binaries/scripts/color-file.sh
 source $HOME/binaries/scripts/init-prechecks.sh
 
 printf "\n\n************Checking installed binaries**************\n\n"
