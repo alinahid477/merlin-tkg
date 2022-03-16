@@ -18,6 +18,15 @@
         "defaultoptionvalue": "nsxalb"
     },
     {
+        "name": "aws_networking",
+        "filename":"aws-network-$.template",
+        "prompt": "Choose options to configure aws networking?",
+        "options": ["follow-management","new","existing"],
+        "hint": "As Per Management (as-per-management): If you used the option to create a new VPC when you deployed the management cluster, by default, all Tanzu Kubernetes clusters that you deploy from this management cluster will also create a new VPC and one or three NAT gateways. Beware of 5 NAT gateways per availability zones limitation from AWS.\n\nExisting (existing): To avoid the limit of 5 NAT gateways per availability zone, you can choose reuse \"existing\" VPCID and Subnet IDs (either an existing within the availability zone OR the ones that got created during management cluster).\n\nNew (new): Choose this option to create new VPC and Subnets in the availability zone",
+        "andconditions_forblock": [ "INFRASTRUCTURE_PROVIDER=aws" ],
+        "defaultoptionvalue": "existing"
+    },
+    {
         "name": "nodesize",
         "filename":"#-nodesize-$.template",
         "prompt": "What level of details you would like for configuring k8s nodes?",

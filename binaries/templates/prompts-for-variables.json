@@ -116,7 +116,188 @@
         "hint": "Optional, set if you want to override the default value. An Azure VM size for the worker node VMs, chosen to fit expected workloads. The default value is Standard_D2s_v3",
         "defaultvalue": "Standard_D2s_v3"
     },
+    {
+        "name": "<AZURE_CONTROL_PLANE_DATA_DISK_SIZE_GIB>",
+        "hint": "Size of data disk, as described in Azure documentation.\nExamples: 128, 256.\nControl plane nodes are always provisioned with a data disk.",
+        "defaultvalue": "128"
+    },
+    {
+        "name": "<AZURE_CONTROL_PLANE_OS_DISK_SIZE_GIB>",
+        "hint": "Size of OS disk, as described in Azure documentation.\nExamples: 128, 256.\nControl plane nodes are always provisioned with a data disk.",
+        "defaultvalue": "128"
+    },
+    {
+        "name": "<AZURE_CONTROL_PLANE_OS_DISK_STORAGE_ACCOUNT_TYPE>",
+        "hint": "Type of Azure storage account for control plane VM disks. Example: Premium_LRS.",
+        "defaultvalue": "Premium_LRS"
+    },
+    {
+        "name": "<AZURE_ENABLE_NODE_DATA_DISK>",
+        "hint": "Set to true to provision a data disk for each worker node VM.\nAzure documentation:https://docs.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview#data-disk",
+        "defaultvalue": false
+    },
+    {
+        "name": "<AZURE_NODE_DATA_DISK_SIZE_GIB>",
+        "hint": "Size of data disk, as described in Azure documentation.\nExample: 128, 256\nAzure Documentation: https://docs.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview#data-disk",
+        "conditionalvalue": ["AZURE_ENABLE_NODE_DATA_DISK==true;defaultvalue=128"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AZURE_NODE_OS_DISK_SIZE_GIB>",
+        "hint": "Size of OS disk, as described in Azure documentation Disk roles (https://docs.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview#data-disk), for worker VMs, in GB. Examples: 128, 256.",
+        "conditionalvalue": ["AZURE_ENABLE_NODE_DATA_DISK==true;defaultvalue=128"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AZURE_NODE_OS_DISK_STORAGE_ACCOUNT_TYPE>",
+        "hint": "Type of Azure storage account for worker VM disks. Example: Premium_LRS.",
+        "conditionalvalue": ["AZURE_ENABLE_NODE_DATA_DISK==true;defaultvalue=Premium_LRS"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
 
+
+
+
+    {
+        "name": "<AWS_ACCESS_KEY_ID>",
+        "hint": "The access key ID for your AWS account. This is one option for authenticating to AWS. This wizard does not support AWS_PROFILE option yet.",
+        "defaultvaluekey": "AWS_ACCESS_KEY_ID",
+        "use_special_replace": true,
+        "skip_prompt": true
+    },
+    {
+        "name": "<AWS_SECRET_ACCESS_KEY>",
+        "hint": "The secret access key for your AWS account. This is one option for authenticating to AWS. This wizard does not support AWS_PROFILE option yet.",
+        "defaultvaluekey": "AWS_SECRET_ACCESS_KEY",
+        "use_special_replace": true,
+        "skip_prompt": true
+    },
+    {
+        "name": "<AWS_SESSION_TOKEN>",
+        "hint": "Provide the AWS session token granted to your account if you are required to use a temporary access key.",
+        "conditionalvalue": ["AWS_SESSION_TOKEN;defaultvaluekey=AWS_SESSION_TOKEN"],
+        "conditions_lookup_file": "this",
+        "use_special_replace": true,
+        "skip_prompt": true
+    },
+    {
+        "name": "<AWS_REGION>",
+        "hint": "The name of the AWS region in which to deploy the cluster. For example, us-west-2. You can also specify the us-gov-east and us-gov-west regions in AWS GovCloud.\nIf you have already set a different region as an environment variable you must unset that environment variable",
+        "defaultvaluekey": "AWS_REGION",
+        "skip_prompt": true
+    },
+    {
+        "name": "<AWS_NODE_AZ>",
+        "hint": "The name of the AWS availability zone in your chosen region that you want use as the availability zone for this management cluster.\nTo deploy a prod management cluster with three control plane nodes, you must also set AWS_NODE_AZ_1 and AWS_NODE_AZ_2.",
+        "defaultvaluekey": "AWS_NODE_AZ"
+    },
+    {
+        "name": "<AWS_NODE_AZ_1>",
+        "hint": "Set this variables if you want to deploy a prod with three control plane nodes.\nAvailability zones must be in the same region as AWS_NODE_AZ.\nFor example, us-west-2a, ap-northeast-2b, etc.\nAvailability zone names are the same as the AWS region name, with a single lower-case letter suffix, such as a, b, c. For example, us-west-2a.",
+        "conditionalvalue": ["CLUSTER_PLAN==prod;defaultvaluekey=AWS_NODE_AZ"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AWS_NODE_AZ_2>",
+        "hint": "Set this variables if you want to deploy a prod with three control plane nodes.\nAvailability zones must be in the same region as AWS_NODE_AZ.\nFor example, us-west-2a, ap-northeast-2b, etc.\nAvailability zone names are the same as the AWS region name, with a single lower-case letter suffix, such as a, b, c. For example, us-west-2a.",
+        "conditionalvalue": ["CLUSTER_PLAN==prod;defaultvaluekey=AWS_NODE_AZ"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<CONTROL_PLANE_MACHINE_TYPE>",
+        "hint": "The Amazon EC2 instance type to use for cluster control plane nodes, for example t3.small or m5.large.",
+        "defaultvalue": "t3.small"
+    },
+    {
+        "name": "<NODE_MACHINE_TYPE>",
+        "hint": "The Amazon EC2, instance type to use for cluster worker nodes, for example t3.small or m5.large.",
+        "defaultvalue": "m5.large"
+    },
+    {
+        "name": "<BASTION_HOST_ENABLED>",
+        "hint": "By default this option is set to \"true\" in the global Tanzu Kubernetes Grid configuration. Specify \"true\" to deploy an AWS bastion host or \"false\" to reuse an existing bastion host. If no bastion host exists in your availability zone(s) and you set AWS_VPC_ID to use an existing VPC, set BASTION_HOST_ENABLED to \"true\".",
+        "defaultvalue": "true"
+    },
+    {
+        "name": "<AWS_VPC_ID>",
+        "hint": "The ID of an existing VPC. Find the VPC ID: https://<region>.console.aws.amazon.com/vpc/home?region=<region>#vpcs:"
+    },
+    {
+        "name": "<AWS_PUBLIC_SUBNET_ID>",
+        "hint": "For using existing VPC, enter the ID of a public subnet that already exists in AWS AZ of AWS_NODE_AZ. Find the VPC ID: https://<region>.console.aws.amazon.com/vpc/home?region=<region>#subnets:"
+    },
+    {
+        "name": "<AWS_PUBLIC_SUBNET_ID_1>",
+        "hint": "The ID of a public subnet that exists in AWS_NODE_AZ_1.",
+        "conditionalvalue": ["CLUSTER_PLAN==prod;defaultvaluekey=AWS_PUBLIC_SUBNET_ID"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AWS_PUBLIC_SUBNET_ID_2>",
+        "hint": "The ID of a public subnet that exists in AWS_NODE_AZ_2.",
+        "conditionalvalue": ["CLUSTER_PLAN==prod;defaultvaluekey=AWS_PUBLIC_SUBNET_ID"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AWS_PRIVATE_SUBNET_ID>",
+        "hint": "For using existing VPC, enter the ID of a private subnet that already exists in AWS AZ of AWS_NODE_AZ. Find the VPC ID: https://<region>.console.aws.amazon.com/vpc/home?region=<region>#subnets:"
+    },
+    {
+        "name": "<AWS_PRIVATE_SUBNET_ID_1>",
+        "hint": "The ID of a public subnet that exists in AWS_NODE_AZ_1.",
+        "conditionalvalue": ["CLUSTER_PLAN==prod;defaultvaluekey=AWS_PRIVATE_SUBNET_ID"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AWS_PRIVATE_SUBNET_ID_2>",
+        "hint": "The ID of a public subnet that exists in AWS_NODE_AZ_2.",
+        "conditionalvalue": ["CLUSTER_PLAN==prod;defaultvaluekey=AWS_PRIVATE_SUBNET_ID"],
+        "conditions_lookup_file": "this",
+        "optional": true
+    },
+    {
+        "name": "<AWS_VPC_CIDR>",
+        "hint": "Set this value if you want Tanzu Kubernetes Grid to create a new VPC in the selected region. If the recommended range of 10.0.0.0/16 is not available, enter a different IP range in CIDR format.",
+        "defaultvalue": "10.0.0.0/16"
+    },
+    {
+        "name": "<AWS_PUBLIC_NODE_CIDR>",
+        "hint": "When Tanzu Kubernetes Grid deploys cluster, it creates this subnetwork in AWS_NODE_AZ. If the recommended range of 10.0.1.0/24 is not available, enter a different IP range in CIDR format for public nodes to use.",
+        "defaultvalue": "10.0.1.0/24"
+    },
+    {
+        "name": "<AWS_PUBLIC_NODE_CIDR_1>",
+        "hint": "When Tanzu Kubernetes Grid deploys cluster, it creates this subnetwork in AWS_NODE_AZ_1. If the recommended range of 10.0.3.0/24 is not available, enter a different IP range in CIDR format for public nodes to use.",
+        "defaultvalue": "10.0.3.0/24"
+    },
+    {
+        "name": "<AWS_PUBLIC_NODE_CIDR_2>",
+        "hint": "When Tanzu Kubernetes Grid deploys cluster, it creates this subnetwork in AWS_NODE_AZ_2. If the recommended range of 10.0.5.0/24 is not available, enter a different IP range in CIDR format for public nodes to use.",
+        "defaultvalue": "10.0.5.0/24"
+    },
+    {
+        "name": "<AWS_PRIVATE_NODE_CIDR>",
+        "hint": "When Tanzu Kubernetes Grid deploys cluster, it creates this subnetwork in AWS_NODE_AZ. If the recommended range of 10.0.0.0/24 is not available, enter a different IP range in CIDR format for private nodes to use.",
+        "defaultvalue": "10.0.0.0/24"
+    },
+    {
+        "name": "<AWS_PRIVATE_NODE_CIDR_1>",
+        "hint": "When Tanzu Kubernetes Grid deploys cluster, it creates this subnetwork in AWS_NODE_AZ_1. If the recommended range of 10.0.2.0/24 is not available, enter a different IP range in CIDR format for private nodes to use.",
+        "defaultvalue": "10.0.2.0/24"
+    },
+    {
+        "name": "<AWS_PRIVATE_NODE_CIDR_2>",
+        "hint": "When Tanzu Kubernetes Grid deploys cluster, it creates this subnetwork in AWS_NODE_AZ_1. If the recommended range of 10.0.4.0/24 is not available, enter a different IP range in CIDR format for private nodes to use.",
+        "defaultvalue": "10.0.4.0/24"
+    },
 
 
 

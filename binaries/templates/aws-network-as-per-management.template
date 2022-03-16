@@ -1,0 +1,3 @@
+
+# AWS-NETWORK config to follow as per config of management cluster 
+# read more at https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-k8s-clusters-aws.html#deploy-a-cluster-that-shares-a-vpc-and-nat-gateways-with-the-management-cluster-4
