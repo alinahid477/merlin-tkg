@@ -43,13 +43,13 @@ source $HOME/binaries/scripts/init-prechecks.sh
 
 printf "\n\n************Checking installed $CLOUD cli **************\n\n"
 source $HOME/binaries/scripts/install-cloud-cli.sh
-installTanzuCLI
+installCloudCLI $CLOUD || returnOrexit || exit 1
 printf "DONE\n\n\n"
 
 
 printf "\n\n************Checking installed tanzu binaries**************\n\n"
 source $HOME/binaries/scripts/install-tanzu-cli.sh
-installCloudCLI $CLOUD || returnOrexit || exit 1
+installTanzuCLI || returnOrexit || exit 1
 printf "DONE\n\n\n"
 
 
