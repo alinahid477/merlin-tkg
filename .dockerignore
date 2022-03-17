@@ -5,7 +5,8 @@
 .docker/config.json
 .vmware-cna-saas
 .azure
-.tanzu
+.aws
+tanzu
 .ssh
 .kube-tkg
 .config
