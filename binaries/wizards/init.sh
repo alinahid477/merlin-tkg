@@ -46,7 +46,7 @@ then
     printf "DONE\n\n\n"
 fi
 
-printf "\n\n\n${greencolor}RUN tkgui --help for details on how to use this UI${normalcolor}\n"
+printf "\n\n\n${greencolor}RUN merlin --help for details on how to use this UI${normalcolor}\n"
 
 cd ~
 
