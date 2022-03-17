@@ -6,6 +6,8 @@ if [[ -z $CLOUD ]]
 then
     printf "\n\nERROR: no cloud mentioned. Please provide CLOUD=<vsphere or aws or azure> in .env file\n\n"
     exit 1
+else
+    printf "\n\nEnvironment Variable CLOUD=$CLOUD\n\n"
 fi
 
 if [ ! -f "$HOME/binaries/scripts/returnOrexit.sh" ]

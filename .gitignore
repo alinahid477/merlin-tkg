@@ -11,6 +11,8 @@
 .vmware-cna-saas
 .docker
 tanzu
+.aws
+awscli
 .m2
 .sts4
 .tilt-dev

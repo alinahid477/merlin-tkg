@@ -6,6 +6,7 @@
 .vmware-cna-saas
 .azure
 .aws
+awscli
 tanzu
 .ssh
 .kube-tkg
