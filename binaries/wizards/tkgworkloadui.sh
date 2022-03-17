@@ -48,6 +48,9 @@ function launchUI () {
         local INFRASTRUCTURE_PROVIDER=$(cat $tkcconfigfile | sed -r 's/[[:alnum:]]+=/\n&/g' | awk -F: '$1=="INFRASTRUCTURE_PROVIDER"{print $2}' | xargs)
         if [[ -n $INFRASTRUCTURE_PROVIDER ]]
         then
+            source $HOME/binaries/scripts/clouds/$INFRASTRUCTURE_PROVIDER/$INFRASTRUCTURE_PROVIDER.sh
+            prepareAccountForTKG || returnOrexit || return 1
+            
             source $HOME/binaries/scripts/clouds/$INFRASTRUCTURE_PROVIDER/deploy-tkc.sh
             deployTKC $tkcconfigfile || returnOrexit || return 1
         else

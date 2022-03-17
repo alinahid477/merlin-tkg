@@ -136,7 +136,7 @@ function tkginstall() {
     # printf "\nCOMPLETE=YES" >> /root/.env
 
 
-    printf "\n\n\nRUN tkgui --workload-cluster to start creating workload clusters.\n\n\n"
+    printf "\n\n\nRUN merlin --workload-cluster to start creating workload clusters.\n\n\n"
 
     return 0
 }
