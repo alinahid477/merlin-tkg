@@ -2,6 +2,11 @@
 
 export $(cat /root/.env | xargs)
 
+if [[ -z $CLOUD ]]
+then
+    printf "\n\nERROR: no cloud mentioned. Please provide CLOUD=<vsphere or aws or azure> in .env file\n\n"
+    exit 1
+fi
 
 if [ ! -f "$HOME/binaries/scripts/returnOrexit.sh" ]
 then
@@ -14,7 +19,7 @@ then
     chmod +x $HOME/binaries/scripts/download-common-scripts.sh
     $HOME/binaries/scripts/download-common-scripts.sh tkg scripts
     sleep 1
-    $HOME/binaries/scripts/download-common-scripts.sh clouds.vsphere scripts/clouds/vsphere
+    $HOME/binaries/scripts/download-common-scripts.sh clouds.$CLOUD scripts/clouds/$CLOUD
     sleep 1
     if [[ -n $BASTION_HOST ]]
     then
@@ -33,10 +38,19 @@ source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/color-file.sh
 source $HOME/binaries/scripts/init-prechecks.sh
 
-printf "\n\n************Checking installed binaries**************\n\n"
-source $HOME/binaries/scripts/install-tanzu-cli.sh
+
+printf "\n\n************Checking installed $CLOUD cli **************\n\n"
+source $HOME/binaries/scripts/install-cloud-cli.sh
 installTanzuCLI
 printf "DONE\n\n\n"
+
+
+printf "\n\n************Checking installed tanzu binaries**************\n\n"
+source $HOME/binaries/scripts/install-tanzu-cli.sh
+installCloudCLI $CLOUD || returnOrexit || exit 1
+printf "DONE\n\n\n"
+
+
 
 if [[ -f $HOME/.kube-tkg/config ]]
 then
@@ -44,6 +58,9 @@ then
     source $HOME/binaries/scripts/tanzu_connect.sh
     tanzu_connect_and_confirm
     printf "DONE\n\n\n"
+else
+    source $HOME/binaries/scripts/clouds/$CLOUD/$CLOUD.sh
+    prepareAccountForTKG || returnOrexit || exit 1
 fi
 
 printf "\n\n\n${greencolor}RUN merlin --help for details on how to use this UI${normalcolor}\n"
