@@ -184,6 +184,12 @@
         "skip_prompt": true
     },
     {
+        "name": "<AWS_SSH_KEY_NAME>",
+        "hint": "Provide the AWS ssh key pair name. To find the key pair visit: https://<region>.console.aws.amazon.com/ec2/v2/home?region=<region>#KeyPairs:\nMerlin should have auto created one with name <region>-tkg-keypair",
+        "defaultvaluekey": "AWS_SSH_KEY_NAME",
+        "skip_prompt": true
+    },
+    {
         "name": "<AWS_REGION>",
         "hint": "The name of the AWS region in which to deploy the cluster. For example, us-west-2. You can also specify the us-gov-east and us-gov-west regions in AWS GovCloud.\nIf you have already set a different region as an environment variable you must unset that environment variable",
         "defaultvaluekey": "AWS_REGION",
