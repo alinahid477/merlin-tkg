@@ -488,7 +488,8 @@
         "name": "<OS_VERSION>",
         "hint": "Version for OS_NAME OS. Defaults to 20.04 for Ubuntu. Can be 3 for Photon on vSphere and 2 for Amazon Linux on Amazon EC2",
         "options": ["20.04", "3", "2"],
-        "defaultvaluekey": "OS_VERSION",
+        "conditionalvalue": ["OS_NAME==ubuntu;defaultvalue=20.04", "OS_NAME==photon;defaultvalue=3", "OS_NAME==amazon;defaultvalue=2"],
+        "conditions_lookup_file": "this",
         "optional": true
     },
 

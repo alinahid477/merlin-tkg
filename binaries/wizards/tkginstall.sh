@@ -38,50 +38,74 @@ function tkginstall() {
 
     printf "\n\n\n"
 
-    isexists=$(ls .ssh/tkg_rsa.pub)
-    if [[ -z $isexists ]]
+    if [[ -z $CLOUD ]]
     then
-        
-        if [[ -z $TKG_ADMIN_EMAIL ]]
-        then
-            printf "TKG_ADMIN_EMAIL not set in the .env file."
-            printf "\n"
-            if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
-            then
-                printf "\nERROR: tkg admin email not set.\n"
-                returnOrexit || return 1
-            fi
-            while true; do
-                read -p "TKG_ADMIN_EMAIL: " inp
-                if [ -z "$inp" ]
-                then
-                    printf "\nThis is required.\n"
-                else 
-                    TKG_ADMIN_EMAIL=$inp
-                    break;
-                fi
-            done        
-            printf "\nTKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL" >> /root/.env
-            sleep 1
-            export $(cat /root/.env | xargs)
-        else
-            printf "\nUsing TKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL from environment variable...no need to collect from user.\n"
-        fi
-        
+        printf "\n${redcolor}ERROR: No value for environment variable CLOUD. This value must exists.${normalcolor}\n"
+        returnOrexit || return 1
+    fi
 
-        printf "\n\n\nexecuting ssh-keygen with email $TKG_ADMIN_EMAIL...\n"
-        ssh-keygen -f ~/.ssh/tkg_rsa -t rsa -b 4096 -C "$TKG_ADMIN_EMAIL"
-        printf "\nDONE.\n"
-    else 
-        isexists=$(ls .ssh/tkg_rsa)
-        if [[ -z $isexists ]]
+    if [[ $CLOUD == 'aws' ]]
+    then
+        # by the time the code reaches here there should already key kp uploaded to aws. see aws.sh
+        source $HOME/binaries/scripts/clouds/aws/aws.sh
+        local awsKPname=$(getKeyPairName)
+
+        if [[ -z $awsKPname ]]
         then
-            printf "\n\nERROR: found tkg_rsa.pub in the .ssh dir BUT did not find private key to add named tkg_rsa."
-            printf "\n\tPlease remove the tkg_rsa.pub to re-create key pair OR provide private key tkg_rsa file"
-            printf "\n\tQuiting..."
+            printf "\n${redcolor}ERROR: aws key pair name could not be retrieved.${normalcolor}\n"
             returnOrexit || return 1
         fi
+
+        printf "\n\n\n Here's your key pair name for aws: $awsKPname\n"
+    else
+
+        # Generate key pair when it is not aws.
+        isexists=$(ls .ssh/tkg_rsa.pub)
+        if [[ -z $isexists ]]
+        then
+            if [[ -z $TKG_ADMIN_EMAIL ]]
+            then
+                printf "TKG_ADMIN_EMAIL not set in the .env file."
+                printf "\n"
+                if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
+                then
+                    printf "\nERROR: tkg admin email not set.\n"
+                    returnOrexit || return 1
+                fi
+                while true; do
+                    read -p "TKG_ADMIN_EMAIL: " inp
+                    if [ -z "$inp" ]
+                    then
+                        printf "\nThis is required.\n"
+                    else 
+                        TKG_ADMIN_EMAIL=$inp
+                        break;
+                    fi
+                done        
+                printf "\nTKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL" >> /root/.env
+                sleep 1
+                export $(cat /root/.env | xargs)
+            else
+                printf "\nUsing TKG_ADMIN_EMAIL=$TKG_ADMIN_EMAIL from environment variable...no need to collect from user.\n"
+            fi
+            
+
+            printf "\n\n\nexecuting ssh-keygen with email $TKG_ADMIN_EMAIL...\n"
+            ssh-keygen -f ~/.ssh/tkg_rsa -t rsa -b 4096 -C "$TKG_ADMIN_EMAIL"
+            printf "\nDONE.\n"
+        else 
+            isexists=$(ls .ssh/tkg_rsa)
+            if [[ -z $isexists ]]
+            then
+                printf "\n\nERROR: found tkg_rsa.pub in the .ssh dir BUT did not find private key to add named tkg_rsa."
+                printf "\n\tPlease remove the tkg_rsa.pub to re-create key pair OR provide private key tkg_rsa file"
+                printf "\n\tQuiting..."
+                returnOrexit || return 1
+            fi
+        fi
     fi
+
+    
 
     if [[ -n $BASTION_HOST ]]
     then
@@ -105,8 +129,12 @@ function tkginstall() {
         source $HOME/binaries/scripts/bastion/bastionhostmanagementsetup.sh
         auto_tkginstall || returnOrexit || return 1
     else
-        printf "\n\n\n Here's your public key in ~/.ssh/id_rsa.pub:\n"
-        cat ~/.ssh/tkg_rsa.pub
+        if [[ $CLOUD != 'aws' ]]
+        then
+            # aws does not need a rsa key. This is already uploaded in aws kp. See above. and aws.sh
+            printf "\n\n\n Here's your public key in ~/.ssh/id_rsa.pub:\n"
+            cat ~/.ssh/tkg_rsa.pub
+        fi
 
         if [[ -n $MANAGEMENT_CLUSTER_CONFIG_FILE ]]
         then
