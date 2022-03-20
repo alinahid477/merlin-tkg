@@ -142,7 +142,12 @@ function tkginstall() {
             tanzu management-cluster create --file $MANAGEMENT_CLUSTER_CONFIG_FILE -v 9
         else
             printf "\nLaunching management cluster create using UI...\n"
-            tanzu management-cluster create --ui -y -v 9 --browser none
+            local bindparam=''
+            if [[ -n $BIND_ADDRESS ]]
+            then
+                bindparam="--bind $BIND_ADDRESS"
+            fi
+            tanzu management-cluster create $bindparam --ui -y -v 9 --browser none
         fi
     fi   
 
