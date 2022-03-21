@@ -56,11 +56,11 @@ chmod +x start.sh
 
 ## Usage
 
-- `tkgui --help`
+- `merlin --help`
 - `tanzu --help`
 - `kubectl version`
 
-
+   
 # Under the hood
 
 ### Start.sh/bat
