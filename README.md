@@ -43,7 +43,7 @@ OR
     - `DOCKERHUB_USERNAME`=dockerhub username. | *MANDATORY, needed to avoid dockerhub ratelimit issue*
     - `DOCKERHUB_PASSWORD`=dockerhub password. | *MANDATORY*
     - `TKG_ADMIN_EMAIL`=an email addess. does not have to a real email address. This email gets used for creating key-pair needed to deploying management cluster. | *MANDATORY*
-    - `BIND_ADDRESS`=the ip address or fqdn where the TKG installer UI will be accessible. | *OPTIONAL. Default is: 127.0.0.1 is 127.0.0.1 is not available on port 8080 provide this value*
+    - `BIND_ADDRESS`=the ip address or fqdn and port number where the TKG installer UI will be accessible. | *OPTIONAL if you are not using a bastion host or you have a browser available on bastion host. Default is: 127.0.0.1 is 127.0.0.1 is not available on port 8080 provide this value. If this is run in bastion host the use the up address of the bastion host. eg: 192.168.110.100:8080*
     - `AWS_ACCESS_KEY_ID`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
     - `AWS_SECRET_ACCESS_KEY`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
     - `AWS_SESSION_TOKEN`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
@@ -74,7 +74,13 @@ chmod +x start.sh
 - `tanzu --help`
 - `kubectl version`
 
-   
+
+# Demo video
+*play in 1.75x speed*
+
+[![Watch the video](https://img.youtube.com/vi/8TfGa6OWwS8/hqdefault.jpg)](https://youtu.be/8TfGa6OWwS8)
+
+
 # Under the hood
 
 ### Start.sh/bat
