@@ -37,18 +37,18 @@ OR
 
 - rename .env.sample to .env (`cp .env.sample .env`)
 - Fill out values in the .env file accordingly using your favorite editor (eg: `nano .env`). Example:
-    - `CLOUD`=vsphere or aws or azure. *mandatory*
-    - `BASTION_HOST`=keep and provide ip or fqdn of the VM if using jump or bastion host. Otherwise delete this variable. *optional if not using bastion host* ***must provide the file named id_rsa as the privatekey to access bastion host. password based login not supported.***
-    - `BASTION_USERNAME`=keep and provide username for the jump or bastion host. Otherwise delete this variable *optional if not using bastion host*
-    - `DOCKERHUB_USERNAME`=dockerhub username *mandatory, needed to avoid dockerhub ratelimit issue*
-    - `DOCKERHUB_PASSWORD`=dockerhub password *mandatory*
-    - `TKG_ADMIN_EMAIL`=an email addess. does not have to a real email address. This email gets used for creating key-pair needed to deploying management cluster *mandatory*
-    - `BIND_ADDRESS`=the ip address or fqdn where the TKG installer UI will be accessible. *optional. Default is: 127.0.0.1*
-    - `AWS_ACCESS_KEY_ID`=if not aws delete this line *optional if cloud is not aws*
-    - `AWS_SECRET_ACCESS_KEY`=if not aws delete this line *optional if cloud is not aws*
-    - `AWS_SESSION_TOKEN`=if not aws delete this line *optional if cloud is not aws*
-    - `AWS_REGION`=if not aws delete this line. *optional if cloud is not aws*
-    - `AZ_BASE_IMAGE`=if not azure delete this line. Otherwise grab the latest value from https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/{tkg_version}/vmware-tanzu-kubernetes-grid-{tkg_version_without_any_dot}/GUID-mgmt-clusters-azure.html#accept-the-base-image-license-5 *optional if cloud is not azure*
+    - `CLOUD`=vsphere or aws or azure. *MANDATORY*
+    - `BASTION_HOST`=keep and provide ip or fqdn of the VM if using jump or bastion host. Otherwise delete this variable. | *OPTIONAL if not using bastion host* | ***must provide the file named id_rsa as the privatekey under dir .ssh to access bastion host. password based login not supported.***
+    - `BASTION_USERNAME`=keep and provide username for the jump or bastion host. Otherwise delete this variable. | **OPTIONAL if cloud is not aws* if not using bastion host*
+    - `DOCKERHUB_USERNAME`=dockerhub username. | *MANDATORY, needed to avoid dockerhub ratelimit issue*
+    - `DOCKERHUB_PASSWORD`=dockerhub password. | *MANDATORY*
+    - `TKG_ADMIN_EMAIL`=an email addess. does not have to a real email address. This email gets used for creating key-pair needed to deploying management cluster. | *MANDATORY*
+    - `BIND_ADDRESS`=the ip address or fqdn where the TKG installer UI will be accessible. | *OPTIONAL. Default is: 127.0.0.1 is 127.0.0.1 is not available on port 8080 provide this value*
+    - `AWS_ACCESS_KEY_ID`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
+    - `AWS_SECRET_ACCESS_KEY`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
+    - `AWS_SESSION_TOKEN`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
+    - `AWS_REGION`=if not aws delete this line. | *OPTIONAL if cloud is not aws*
+    - `AZ_BASE_IMAGE`=if not azure delete this line. Otherwise grab the latest value from https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/{tkg_version}/vmware-tanzu-kubernetes-grid-{tkg_version_without_any_dot}/GUID-mgmt-clusters-azure.html#accept-the-base-image-license-5 . | *OPTIONAL if cloud is not azure*
 
 
 ## Start
