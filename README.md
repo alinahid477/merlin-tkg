@@ -20,7 +20,8 @@ The goal is to:
 - Follow along as per below.
 
 ### Docker
-- local machine / server must have docker ce or docker ee installed.
+- local machine / server must have docker ce or docker ee installed. (eg: `docker version`)
+- May need to run this (if you have not done this before) `sudo usermod -aG docker $USER`
 
 ### Binaries
 
