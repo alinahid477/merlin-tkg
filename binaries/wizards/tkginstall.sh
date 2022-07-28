@@ -105,8 +105,6 @@ function tkginstall() {
         fi
     fi
 
-    
-
     if [[ -n $BASTION_HOST ]]
     then
         echo "=> Bastion host detected. Tkg installation will launch merlin-tkg docker in the remote host."
@@ -129,6 +127,11 @@ function tkginstall() {
         source $HOME/binaries/scripts/bastion/bastionhostmanagementsetup.sh
         auto_tkginstall || returnOrexit || return 1
     else
+        if [[ $CLOUD == 'azure' ]]
+        then
+            source $HOME/binaries/scripts/clouds/azure/azure.sh
+            prepareAccountForTKG
+        fi
         if [[ $CLOUD != 'aws' ]]
         then
             # aws does not need a rsa key. This is already uploaded in aws kp. See above. and aws.sh
